@@ -9,14 +9,14 @@ pipeline {
         stage('Checkout SCM'){
             steps{
                 script{
-                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jay75chauhan/Teraform-EKS-Jenkins']])
+                    checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/jay75chauhan/Terraform-EKS-Jenkins']])
                 }
             }
         }
         stage('Initializing Terraform'){
             steps{
                 script{
-                    dir('Teraform-EKS-deployment'){
+                    dir('Terraform-EKS-deployment'){
                         sh 'terraform init'
                     }
                 }
@@ -25,7 +25,7 @@ pipeline {
         stage('Formatting Terraform Code'){
             steps{
                 script{
-                    dir('Teraform-EKS-deployment'){
+                    dir('Terraform-EKS-deployment'){
                         sh 'terraform fmt'
                     }
                 }
@@ -34,7 +34,7 @@ pipeline {
         stage('Validating Terraform'){
             steps{
                 script{
-                    dir('Teraform-EKS-deployment'){
+                    dir('Terraform-EKS-deployment'){
                         sh 'terraform validate'
                     }
                 }
@@ -43,7 +43,7 @@ pipeline {
         stage('Previewing the Infra using Terraform'){
             steps{
                 script{
-                    dir('Teraform-EKS-deployment'){
+                    dir('Terraform-EKS-deployment'){
                         sh 'terraform plan'
                     }
                     input(message: "Are you sure to proceed?", ok: "Proceed")
@@ -62,7 +62,7 @@ pipeline {
         stage('Deploying Nginx Application') {
             steps{
                 script{
-                    dir('Teraform-EKS-deployment/ConfigurationFiles') {
+                    dir('Terraform-EKS-deployment/ConfigurationFiles') {
                         sh 'aws eks update-kubeconfig --name my-eks-cluster'
                         sh 'kubectl apply -f deployment.yaml'
                         sh 'kubectl apply -f service.yaml'
